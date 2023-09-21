@@ -15,6 +15,21 @@ model User {
   name      String
   email     String   @unique
   createdAt DateTime @default(now())
+  active    Boolean  @default(true)
+  role      Role     @default(USER)
 
   @@map("users")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Photos {
+  id     Int     @id @default(autoincrement())
+  url    String
+  legend String?
+
+  @@map("photos")
 }
