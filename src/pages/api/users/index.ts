@@ -3,15 +3,24 @@ import { Users } from '@/utils/users'
 import prisma from '../../../../libs/prisma'
 
 // Getting all users
-const handlerGet: NextApiHandler = (req, res) => {
-  const { search, age } = req.query
-  res.status(200).json(Users)
+const handlerGet: NextApiHandler =  async (req, res) => {
+  const users = await prisma.user.findMany({
+    where: {
+      active: true
+    }
+  })
+
+  res.json({ status: true, users })
 }
 
-const handlerPost: NextApiHandler = (req, res) => {
-  const { name, age } = req.body
+const handlerPost: NextApiHandler = async (req, res) => {
+  const { name, email } = req.body
 
-  res.status(201).json({ status: true, user: { name, age } })
+  const newUser = await prisma.user.create({
+    data: { name, email }
+  })
+
+  res.status(201).json({ status: true, user: newUser })
 }
 
 const handler: NextApiHandler = (req, res) => {

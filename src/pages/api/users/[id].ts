@@ -1,20 +1,22 @@
 import { NextApiHandler } from 'next'
 import { Users } from '@/utils/users'
+import prisma from '../../../../libs/prisma'
 
-const handler: NextApiHandler = (req, res) => {
+const handler: NextApiHandler = async (req, res) => {
   const { id } = req.query
-  let myUser = null
 
-  for(let i in Users) {
-    if (Users[i].id.toString() === id) {
-      myUser = Users[i]
+  const user = await prisma.user.findUnique({
+    where: {
+      id: parseInt(id as string)
     }
+  })
+
+  if (user) {
+    res.json({ status: true, user })
+    return
   }
-  if (myUser) {
-    res.json(myUser)
-  } else {
-    res.json({ error: 'Usuário não encontrado' })
-  }
+  
+  res.json({ error: 'Usuário não encontrado' })
 }
 
 export default handler
