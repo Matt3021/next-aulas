@@ -61,6 +61,22 @@ const handlerPut: NextApiHandler = async (req, res) => {
   res.json({ error: 'Não foi possível alterar este usuário' })
 }
 
+const handlerDelete: NextApiHandler = async (req, res) => {
+  const { id } = req.query
+
+  const deleteUser = await prisma.user.delete({
+    where: {
+      id: parseInt(id as string)
+    }
+  }).catch(() => {
+    res.json({ error: 'Usuário não econtrado' })
+  })
+
+  if (deleteUser) {
+    res.json({ status: true })
+  }
+}
+
 const handler: NextApiHandler = async (req, res) => {
   switch (req.method) {
     case 'GET':
@@ -68,6 +84,9 @@ const handler: NextApiHandler = async (req, res) => {
       break
     case 'PUT':
       handlerPut(req, res)
+      break
+    case 'DELETE':
+      handlerDelete(req, res)
       break
   }
 }
