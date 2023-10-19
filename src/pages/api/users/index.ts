@@ -7,6 +7,11 @@ const handlerGet: NextApiHandler =  async (req, res) => {
   const users = await prisma.user.findMany({
     where: {
       active: true
+    }, 
+    select: {
+      id: true,
+      name: true,
+      email:true
     }
   })
 
