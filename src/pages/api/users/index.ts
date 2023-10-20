@@ -6,7 +6,9 @@ import prisma from '../../../../libs/prisma'
 const handlerGet: NextApiHandler =  async (req, res) => {
   const users = await prisma.user.findMany({
     where: {
-      active: true
+      name: {
+        startsWith: 'B'
+      }
     }, 
     select: {
       id: true,
