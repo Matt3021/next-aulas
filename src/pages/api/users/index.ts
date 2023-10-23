@@ -14,6 +14,9 @@ const handlerGet: NextApiHandler =  async (req, res) => {
       id: true,
       name: true,
       email:true
+    },
+    orderBy: {
+      id: 'asc'
     }
   })
 
