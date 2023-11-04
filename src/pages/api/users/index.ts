@@ -42,9 +42,12 @@ const handlerPost: NextApiHandler = async (req, res) => {
 
   const newUser = await prisma.user.create({
     data: { name, email }
+  }).catch(() => {
+    res.json({ error: 'Usuário já existe' })
   })
-
-  res.status(201).json({ status: true, user: newUser })
+  if (newUser) {
+    res.status(201).json({ status: true, user: newUser })
+  }
 }
 
 const handler: NextApiHandler = (req, res) => {
