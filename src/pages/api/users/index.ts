@@ -4,7 +4,21 @@ import prisma from '../../../../libs/prisma'
 
 // Getting all users
 const handlerGet: NextApiHandler =  async (req, res) => {
+  const { page } = req.query
+
+  // Items per page
+  const take = 2
+
+  // Offset off items
+  let skip = 0
+
+  if (page) {
+    skip = (parseInt(page as string) - 1) * take
+  }
+
   const users = await prisma.user.findMany({
+    skip,
+    take,
     where: {
       name: {
         startsWith: 'B'
