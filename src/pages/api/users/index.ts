@@ -1,38 +1,13 @@
 import { NextApiHandler } from 'next'
 import { Users } from '@/utils/users'
 import prisma from '../../../../libs/prisma'
+import endpoints from '../../../../libs/api'
 
 // Getting all users
 const handlerGet: NextApiHandler =  async (req, res) => {
   const { page } = req.query
 
-  // Items per page
-  const take = 2
-
-  // Offset off items
-  let skip = 0
-
-  if (page) {
-    skip = (parseInt(page as string) - 1) * take
-  }
-
-  const users = await prisma.user.findMany({
-    skip,
-    take,
-    where: {
-      name: {
-        startsWith: 'B'
-      }
-    }, 
-    select: {
-      id: true,
-      name: true,
-      email:true
-    },
-    orderBy: {
-      id: 'asc'
-    }
-  })
+  const users = await endpoints.getAllUsers(parseInt(page as string))
 
   res.json({ status: true, users })
 }
@@ -42,7 +17,7 @@ const handlerPost: NextApiHandler = async (req, res) => {
 
   const newUser = await prisma.user.create({
     data: { name, email }
-  }).catch(() => {
+  }).catch((e) => {
     res.json({ error: 'Usuário já existe' })
   })
   if (newUser) {
